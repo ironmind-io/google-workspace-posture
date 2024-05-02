@@ -12,8 +12,13 @@ google-auth = "^2.29.0"
 google-auth-oauthlib = "^1.2.0"
 google-auth-httplib2 = "^0.2.0"
 python-dotenv = "^1.0.1"
+pydantic = "^2.7.1"
+argparse = "^1.4.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+google-workspace-posture = "google_workspace_posture.main:main"
