@@ -9,12 +9,13 @@ This implements automated checks against Google Workspace's recommended security
 
 
 ## Creating a Service Account
-Enable the Admin SDK API:
+Enable the Admin SDK API and Chrome Policy API:
 
     Go to the Google Cloud Console.
     Select or create a project.
     Navigate to "APIs & Services" > "Library".
     Search for "Admin SDK" and enable it for your project.
+		Search for "Chrome Policy" and enable it for your project.
 
 Create Service Account and Credentials:
 

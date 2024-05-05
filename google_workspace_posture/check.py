@@ -3,25 +3,24 @@ from enum import Enum
 import pydantic
 
 class Check(ABC):
-    
     @property
     @abstractmethod
-    def check_id(self):
+    def id(self):
         pass
 
     @property
     @abstractmethod
-    def check_priority(self):
+    def name(self):
         pass
     
     @property
     @abstractmethod
-    def check_name(self):
+    def name(self):
         pass
 
     @property
     @abstractmethod
-    def check_description(self):
+    def description(self):
         pass
 
     @abstractmethod
@@ -37,19 +36,23 @@ class CheckPriority(Enum):
 
 class CheckStatus(Enum):
     PASS = "pass"
+    PARTIAL_PASS = "partial_pass"
     FAIL = "fail"
+    SKIPPED = "skipped"
     ERROR = "error"
 
 class CheckMetadata(pydantic.BaseModel):
-    check_id: str
-    check_name: str
-    check_description: str
+    id: str
+    name: str
+    description: str
 
 
 class CheckResult(pydantic.BaseModel):
-    check_id: str
-    check_result: CheckStatus
-    check_message: str
+    id: str
+    result: CheckStatus
+    message: str
 
+class CheckError(Exception):
+    pass
 
 

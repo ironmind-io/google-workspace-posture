@@ -17,22 +17,11 @@ class AdminDirectory(Service):
             return "Missing GOOGLE_API_KEY"
         return ''
     SCOPES = [
-        #'https://www.googleapis.com/auth/admin.chrome.printers.readonly',     
-        #'https://www.googleapis.com/auth/admin.directory.customer.readonly',  
-        #'https://www.googleapis.com/auth/admin.directory.device.chromeos.readonl    y',
-        #'https://www.googleapis.com/auth/admin.directory.device.mobile.readonly'    ,                                                                        
-        #'https://www.googleapis.com/auth/admin.directory.domain.readonly',
-        #'https://www.googleapis.com/auth/admin.directory.group.member.readonly',
-        #'https://www.googleapis.com/auth/admin.directory.group.readonly',  
-        #'https://www.googleapis.com/auth/admin.directory.orgunit.readonly',
-        #'https://www.googleapis.com/auth/admin.directory.resource.calendar.reado    nly',    
-        #'https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly    ',
-        #'https://www.googleapis.com/auth/admin.directory.user.alias.readonly',
         'https://www.googleapis.com/auth/admin.directory.user.readonly',
-        'https://www.googleapis.com/auth/admin.directory.userschema.readonly' 
+        'https://www.googleapis.com/auth/admin.directory.userschema.readonly',
     ]
     
-    def load_service(self):
+    def setup(self):
         try:
             service_account_info = json.loads(os.getenv('GOOGLE_API_KEY'))
             credentials = service_account.Credentials\
@@ -42,7 +31,7 @@ class AdminDirectory(Service):
                     os.getenv('GOOGLE_ADMIN_EMAIL'))
             service = build('admin', 'directory_v1',
                     credentials=delegated_creds)
-            return service
+            self.service = service
         except Exception as e:
             logging.error(e)
             msg = '''
@@ -56,3 +45,24 @@ class AdminDirectory(Service):
             '''
 
             raise Exception(msg, "\n\n", e)
+
+
+    def teardown(self):
+        return True
+
+
+    def load_data(self):
+
+        if not self.service:
+            self.setup()
+
+        customer_id = os.getenv('GOOGLE_CUSTOMER_ID')
+        request = self.service.users().list(customer=customer_id,
+                projection='full', maxResults=100)
+        while request is not None:
+            response = request.execute()
+            for user in response.get('users', []):
+                yield user
+            request = self.service.users().list_next(request, response)
+
+
