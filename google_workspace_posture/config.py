@@ -14,9 +14,7 @@ def get_config():
             'api_key': os.getenv('GOOGLE_API_KEY', '')
         }
     }
-    print(config)
     validate_config(config)
-
     return config
 
 

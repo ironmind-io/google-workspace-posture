@@ -1,4 +1,5 @@
 from google_workspace_posture.services.service import Service
+from google_workspace_posture.config import config
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 import json
@@ -6,16 +7,8 @@ import os
 import logging
 
 
-class AdminDirectory(Service):
+class AdminDirectoryUsers(Service):
 
-    def validate_config(self):
-        if not os.getenv('GOOGLE_CUSTOMER_ID'):
-            return "Missing GOOGLE_CUSTOMER_ID"
-        if not os.getenv('GOOGLE_ADMIN_EMAIL'):
-            return "Missing GOOGLE_ADMIN_EMAIL"
-        if not os.getenv('GOOGLE_API_KEY'):
-            return "Missing GOOGLE_API_KEY"
-        return ''
     SCOPES = [
         'https://www.googleapis.com/auth/admin.directory.user.readonly',
         'https://www.googleapis.com/auth/admin.directory.userschema.readonly',
@@ -23,12 +16,13 @@ class AdminDirectory(Service):
     
     def setup(self):
         try:
-            service_account_info = json.loads(os.getenv('GOOGLE_API_KEY'))
+            c = config['google']
+            key = json.loads(c['api_key'])
             credentials = service_account.Credentials\
                     .from_service_account_info(
-                        service_account_info, scopes=self.SCOPES)
+                        key, scopes=self.SCOPES)
             delegated_creds = credentials.with_subject(
-                    os.getenv('GOOGLE_ADMIN_EMAIL'))
+                    c['admin_email'])
             service = build('admin', 'directory_v1',
                     credentials=delegated_creds)
             self.service = service
@@ -56,7 +50,7 @@ class AdminDirectory(Service):
         if not self.service:
             self.setup()
 
-        customer_id = os.getenv('GOOGLE_CUSTOMER_ID')
+        customer_id = config['google']['customer_id']
         request = self.service.users().list(customer=customer_id,
                 projection='full', maxResults=100)
         while request is not None:

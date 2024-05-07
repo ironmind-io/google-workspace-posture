@@ -8,11 +8,11 @@ from google.oauth2 import service_account
 
 
 def run():
-    from google_workspace_posture.services.admin_directory import \
-            AdminDirectory
     from google_workspace_posture.checks.accounts import \
             require_2_step_verification_for_users,\
-            enforce_security_keys_for_admins
+            prevent_password_reuse_with_password_alert,\
+            enforce_security_keys_for_admins,\
+            use_unique_passwords
 
     check = require_2_step_verification_for_users()
 
@@ -24,37 +24,17 @@ def run():
     result = check.check()
     print(result)
 
+
+    check = prevent_password_reuse_with_password_alert()
+    result = check.check()
+    print(result)
+
+    check = use_unique_passwords()
+    result = check.check()
+    print(result)
+
 def test():
-    from google.oauth2 import service_account
-    from googleapiclient.discovery import build
-    
-    SCOPES = [
-            'https://www.googleapis.com/auth/admin.directory.user',
-            'https://www.googleapis.com/auth/admin.directory.device.chromeos',
-            'https://www.googleapis.com/auth/admin.directory.orgunit',
-            'https://www.googleapis.com/auth/chrome.management.policy.readonly'
-    ]
-    
-    api_key = os.getenv('GOOGLE_API_KEY')
-    credentials = service_account.Credentials.from_service_account_info(
-        json.loads(api_key), scopes = SCOPES
-    )
-
-    delegated_creds = credentials.with_subject(
-            os.getenv('GOOGLE_ADMIN_EMAIL'))
-    
-    service = build('admin', 'directory_v1', credentials=delegated_creds)
-
-    chromeservice = build('chromepolicy', 'v1', credentials=delegated_creds)
-
-
-    response = service.customers().policies().resolve(
-        customer='customers/' + os.getenv('GOOGLE_CUSTOMER_ID'),
-        body={
-            'policySchemaFilter': 'chrome.users.*'  # Adjust this filter based on your needs
-        }
-    ).execute()
-
+    pass
 
 
 
