@@ -211,7 +211,22 @@ class use_unique_passwords(Check):
         )
 
                         
-            
+class regularly_review_activty_reports_and_alerts(Check):
+    id= "regularly_review_activty_reports_and_alerts"
+    name = "Regularly Review Activity Reports and Alerts"
+    description = '''
+    This check has not been implemented.  You should regularly review
+    activity reports and alerts to identify suspicious activity.
+    https://support.google.com/a/answer/4580176
+    '''
+    priority = CheckPriority.HIGH
+
+    def check(self):
+        return CheckResult(
+                id=self.id,
+                result=CheckStatus.SKIPPED,
+                message='This check has not been implemented'
+        )
 
 
 

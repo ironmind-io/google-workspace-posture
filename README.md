@@ -14,8 +14,9 @@ Enable the Admin SDK API and Chrome Policy API:
     Go to the Google Cloud Console.
     Select or create a project.
     Navigate to "APIs & Services" > "Library".
-    Search for "Admin SDK" and enable it for your project.
-		Search for "Chrome Policy" and enable it for your project.
+    Search for "Admin SDK" and enable it
+		Search for "Chrome Policy" and enable it
+		Search for "Google Workspace Alert Center API" and enable it
 
 Create Service Account and Credentials:
 

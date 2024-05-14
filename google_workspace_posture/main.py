@@ -34,7 +34,12 @@ def run():
     print(result)
 
 def test():
-    pass
+    from google_workspace_posture.services.admin_directory_reports import\
+            AdminDirectoryRules
+
+    with AdminDirectoryRules() as rules:
+        print(list(rules.load_data()))
+
 
 
 
