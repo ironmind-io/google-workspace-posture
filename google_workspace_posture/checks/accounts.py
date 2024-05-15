@@ -64,14 +64,14 @@ class require_2_step_verification_for_users(Check):
     id = "require_2_step_verification_for_users"
     name = "Require 2-Step Verification for Users"
     description = '''
-        Require 2-Step Verification for Users.  
-        2-Step Verification (a.k.a. 2FA, MFA) is one of the best ways
-        to protect your account.  It requires a second verification step
-        in addition to your password.  This check will identify users
-        where the isEnforcedIn2Sv is False.
-        Enforce 2SV as described here:
-        https://support.google.com/a/answer/9176657
-        '''
+    Require 2-Step Verification for Users.  
+    2-Step Verification (a.k.a. 2FA, MFA) is one of the best ways
+    to protect your account.  It requires a second verification step
+    in addition to your password.  This check will identify users
+    where the isEnforcedIn2Sv is False.
+    Enforce 2SV as described here:
+    https://support.google.com/a/answer/9176657
+    '''
     priority = CheckPriority.CRITICAL
 
     def check(self):
@@ -129,7 +129,10 @@ class prevent_password_reuse_with_password_alert(Check):
     name = "Prevent password reuse with password alert"
     description = '''
     This check identifies org units where the password reuse
-    with password alert setting is not enforced.
+    with password alert setting is not enforced. This setting will alert a user when they are 
+    reusing a password.  This can help prevent credential stuffing and other similar attacks.
+    Note that this configuration requires additional setup when SSO is enabled.  For those 
+    environments, the sso url must be configured as well.
     https://support.google.com/chrome/a/answer/9696707
     '''
     priority = CheckPriority.MEDIUM
@@ -199,6 +202,7 @@ class use_unique_passwords(Check):
     description = '''
     This check has not been implemented.  You should validate whether your 
     training and policies are effective in preventing password reuse.
+    Password reuse and credential mismanagement is one of the leading causes of incidents.
     '''
 
     priority = CheckPriority.MEDIUM
@@ -217,9 +221,66 @@ class regularly_review_activty_reports_and_alerts(Check):
     description = '''
     This check has not been implemented.  You should regularly review
     activity reports and alerts to identify suspicious activity.
+    This will improve the probability of early detection of an incident.
     https://support.google.com/a/answer/4580176
     '''
+    priority = CheckPriority.LOW
+
+    def check(self):
+        return CheckResult(
+                id=self.id,
+                result=CheckStatus.SKIPPED,
+                message='This check has not been implemented'
+        )
+
+
+
+
+class set_up_admin_email_alerts(Check):
+    id= "set_up_admin_email_alerts"
+    name = "Set up Admin Email Alerts"
+    description = '''
+    This check has not been implemented.  You should set up admin email alerts
+    to be notified of important events in your Google Workspace environment.
+    These can be configured in the Rules section in the Admin console.
+    https://support.google.com/a/answer/3230421
+    '''
+    priority = CheckPriority.MEDIUM
+
+    def check(self):
+        return CheckResult(
+                id=self.id,
+                result=CheckStatus.SKIPPED,
+                message='This check has not been implemented'
+        )
+
+
+class identify_and_secure_compromised_accounts(Check):
+    id= "identify_and_secure_compromised_accounts"
+    name = "Identify and Secure Compromised Accounts"
+    description = '''
+    This check has not been implemented.  You should have a process in place
+    to identify and secure compromised accounts.  This should be comprised of two components:
+    1. Regular review and analysis of security logs and alerts
+    2. A response plan in place to address compromised accounts
+    https://support.google.com/a/answer/2984349
+    '''
     priority = CheckPriority.HIGH
+
+    def check(self):
+        return CheckResult(
+                id=self.id,
+                result=CheckStatus.SKIPPED,
+                message='This check has not been implemented'
+        )
+
+
+class turn_off_google_data_download_as_needed(Check):
+    id= "turn_off_google_data_download_as_needed"
+    name = "Turn off Google Data Download as needed"
+    description = '''
+    '''
+    priority = CheckPriority.MEDIUM
 
     def check(self):
         return CheckResult(

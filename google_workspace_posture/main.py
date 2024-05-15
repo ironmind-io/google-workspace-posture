@@ -34,11 +34,13 @@ def run():
     print(result)
 
 def test():
-    from google_workspace_posture.services.admin_directory_reports import\
-            AdminDirectoryRules
+    from google_workspace_posture.services.alertcenter_beta_alerts import\
+        AlertcenterBetaAlerts 
 
-    with AdminDirectoryRules() as rules:
-        print(list(rules.load_data()))
+    with AlertcenterBetaAlerts() as alert_center:
+        print(list(alert_center.load_data()))
+        for x in alert_center.load_data():
+            print(x)
 
 
 

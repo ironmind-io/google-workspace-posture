@@ -6,7 +6,7 @@ import json
 import os   
 import logging
 
-class AdminDirectoryRules(Service): 
+class AlertcenterBetaAlerts(Service): 
     #https://developers.google.com/admin-sdk/alertcenter/reference/rest/v1beta1/TopLevel/getSettings
     SCOPES = [
         'https://www.googleapis.com/auth/apps.alerts',
@@ -42,19 +42,21 @@ class AdminDirectoryRules(Service):
             self.setup()
 
         customer_id = config['google']['customer_id']
-        request = self.service.settings(customerId=customer_id)
+        #request = self.service.settings(customerId=customer_id)
+        request = self.service.alerts().list()
+
         while request is not None:
             response = request.execute()
             print(response)
-            for rule in response.get('rules', []):                
-                yield rule
+            
+            for alert in response.get('alerts', []):
+                yield alert
             
             # Check if there's a nextPageToken provided in the response
-            page_token = response.get('nextPageToken')
+            page_token = response.get('nextPageToken', False)
             if page_token:
-                request = self.service.roleManagement().rules().list(customer=customer_id, pageToken=page_token)
+                request = self.service.alerts().list(pageToken=page_token)
             else:
                 request = None
-
 
 
